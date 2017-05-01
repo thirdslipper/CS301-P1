@@ -1,9 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,9 +16,9 @@ public class GaussianElimination {
 				+ "2. a filename?");
 		String input = kb.nextLine();
 		int[][] matrix = {};
-		if (input.contains(".")){//containsFile(input)){
-			File file = new File(input);
-			matrix = readFile(file);
+		// fix later
+		if (input.contains(".")){//containsFile(input)){	
+			matrix = readFile(input);
 		}
 		else{
 			matrix = enterCoeffs(kb);
@@ -27,10 +26,10 @@ public class GaussianElimination {
 		toString(matrix);
 	}
 
-	public static int[][] readFile(File file) throws FileNotFoundException{
-		FileInputStream fis = new FileInputStream(file);
-		InputStreamReader isr = new InputStreamReader(fis);
-		BufferedReader br = new BufferedReader(isr);
+	public static int[][] readFile(String file) throws FileNotFoundException{
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		
 		ArrayList<String> equations = new ArrayList<String>();
 
 		String line = null;
@@ -57,7 +56,7 @@ public class GaussianElimination {
 	}
 
 	public static int[][] getMatrix(ArrayList<String> equations){
-		//if "1 1 1 5" - 7 char, 3 space, 1 ans floor(7/2) = 3; assume row, cols
+		//if "1 1 1 5" - 7 char, 3 space
 		// "1 2 3" - 5 char, 2 space, 
 		int rows = equations.size();					//(equations.get(0).length()/2);
 		int cols = equations.get(0).split(" ").length;	//equations.size();
@@ -74,6 +73,24 @@ public class GaussianElimination {
 		}
 		return matrix;
 	}
+	public static void evaluate(int[][] matrix){
+		int[] pivots = new int[matrix.length]; //#rows
+		int largestCoeff = -1, rows = pivots.length, cols = matrix[0].length;
+			//get pivots
+		for (int i = 0; i < rows; ++i){	//for ea row
+			for (int j = 0; j < cols-1; ++j){	//for ea col exclude answer
+				if (Math.abs(matrix[i][j]) > largestCoeff){
+					pivots[i] = matrix[i][j];
+				}
+			}
+		}
+		
+		for (int k = 0; k < cols-1; ++k){
+			for (int l = 0; l < rows; ++l){
+				
+			}
+		}
+	}
 	
 	public static void toString(int[][] matrix){
 		for (int i = 0; i < matrix.length; ++i){
@@ -84,12 +101,3 @@ public class GaussianElimination {
 		}
 	}
 }
-
-/*	public static boolean containsFile(String input){
-for (int i = 0; i < input.length(); ++i){
-	if (input.charAt(i) == '.'){
-		return true;
-	}
-}
-return false;
-}*/
