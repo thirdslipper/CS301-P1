@@ -74,9 +74,10 @@ public class GaussianElimination {
 		return matrix;
 	}
 	public static void evaluate(int[][] matrix){
-		int[] pivots = new int[matrix.length]; //#rows
+		int[] pivots = new int[matrix.length]; //#rows and pivots
 		int largestCoeff = -1, rows = pivots.length, cols = matrix[0].length;
-			//get pivots
+		
+			//get pivots[](largest coeffs) of each row
 		for (int i = 0; i < rows; ++i){	//for ea row
 			for (int j = 0; j < cols-1; ++j){	//for ea col exclude answer
 				if (Math.abs(matrix[i][j]) > largestCoeff){
@@ -85,12 +86,42 @@ public class GaussianElimination {
 			}
 		}
 		
+		boolean[] pivotedPoints = new boolean[rows];	// default false
+		int index = 0;
+		double coeff;
+			
 		for (int k = 0; k < cols-1; ++k){
+			// get coeff=largestCoeff, index=row index of largest- for each row
 			for (int l = 0; l < rows; ++l){
-				
+				coeff = 0;
+				if ((Math.abs(matrix[k][l]/pivots[l]) > coeff) && (!pivotedPoints[l])){	//get largest row coeff, not already scaled
+					coeff = Math.abs(matrix[k][l]/pivots[l]); //coeff = coeff of largest row, not already scaled.
+					index = l; 		// index of row w/ largest coeff
+				}
 			}
+			
+			double scaling = 0;
+			int scaleIndex = 0;
+			pivotedPoints[index] = true;
+				//scale relative to index
+			for (int m = 0; m < rows; ++m){
+					//
+				scaling = (-1)*(matrix[m][scaleIndex]/matrix[index][scaleIndex]); //what to mult pivot by
+				for (int n = 0; n < cols; ++n){	//mult each col of others
+					matrix[m][n] = matrix[m][n] + (scaling * matrix[index][n]);
+				}
+				scaleIndex++;
+			}
+/*			for (int m = 0; m < rows; ++m){	//scale
+				scaling = (-1)*(matrix[m][scaleIndex]);
+				for (int n = 0; n < cols; ++n){
+					matrix[m][n] = (scaling * );
+				}
+				scaleIndex++;
+			}*/
 		}
 	}
+	
 	
 	public static void toString(int[][] matrix){
 		for (int i = 0; i < matrix.length; ++i){
