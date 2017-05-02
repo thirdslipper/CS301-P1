@@ -205,6 +205,11 @@ public class GaussianElimination {
 			System.out.println();
 		}
 	}
+	/**
+	 * Creates a matrix of given size with random integers ranging between 0 and 10
+	 * @param size
+	 * @return
+	 */
 	public static double[][] largeMatrix(int size){
 		Random rng = new Random();
 		double[][] matrix = new double[size][size];
