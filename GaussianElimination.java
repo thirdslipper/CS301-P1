@@ -1,5 +1,9 @@
+/**
+ * Author: Colin Koo
+ * Professor: Raheeja
+ * Description: This program evaluates matrices.
+ */
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,19 +21,26 @@ public class GaussianElimination {
 		String input = kb.nextLine();
 		double[][] matrix = {};
 		// fix later
-		if (input.contains(".")){//containsFile(input)){	
-			matrix = readFile(input);
-		}
-		else{
+		if (input.equals("1")){
 			matrix = enterCoeffs(kb);
+		}
+		else if (input.equals("2")){
+			matrix = readFile(kb);
 		}
 		toString(matrix);
 		evaluate(matrix);
 		solveSimplified(matrix);
 	}
 
-	public static double[][] readFile(String file) throws FileNotFoundException{
-		FileReader fr = new FileReader(file);
+	/**
+	 * Reads the file and creates an ArrayList<String> representing a matrix from the data provided in the file.
+	 * @param file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public static double[][] readFile(Scanner kb) throws FileNotFoundException{
+		System.out.println("Enter a file name: ");
+		FileReader fr = new FileReader(kb.nextLine());
 		BufferedReader br = new BufferedReader(fr);
 
 		ArrayList<String> equations = new ArrayList<String>();
@@ -45,6 +56,11 @@ public class GaussianElimination {
 		return getMatrix(equations);
 	}
 
+	/**
+	 * Allows the user to enter their own matrix equations, to be stored in an ArrayList<String>
+	 * @param kb
+	 * @return
+	 */
 	public static double[][] enterCoeffs(Scanner kb){
 		System.out.println("Enter \"done\" to finish entering equations.");
 		// store all equations
@@ -56,7 +72,11 @@ public class GaussianElimination {
 		}
 		return getMatrix(equations);
 	}
-
+	/**
+	 * This method converts an ArrayList<String> containing data of a matrix into a double array of type double.
+	 * @param equations
+	 * @return
+	 */
 	public static double[][] getMatrix(ArrayList<String> equations){
 		//if "1 1 1 5" - 7 char, 3 space
 		// "1 2 3" - 5 char, 2 space, 
@@ -75,10 +95,16 @@ public class GaussianElimination {
 		}
 		return matrix;
 	}
+	/**
+	 * This method evaluates a double array matrix with partial pivoting.
+	 * First it creates an array of pivots.
+	 * Then it loops and for each column, row, it gets the largest scaled ratios then simplifies the other columns with
+	 * respect to it.
+	 * @param matrix
+	 */
 	public static void evaluate(double[][] matrix){
-		double[] solutions = new double[matrix.length];
 		double[] pivots = new double[matrix.length]; //#rows and pivots
-		System.out.println(pivots.length);
+		
 		double largestCoeff = -1;
 		int rows = pivots.length, cols = matrix[0].length;
 
@@ -92,11 +118,11 @@ public class GaussianElimination {
 			}
 		}
 
-/*System.out.print("Pivots: ");
-for (int z = 0; z < pivots.length; ++z){
-	System.out.print(pivots[z] +", ");
-}
-System.out.println();*/
+		System.out.print("Pivots: ");
+		for (int z = 0; z < pivots.length; ++z){
+			System.out.print(pivots[z] +", ");
+		}
+		System.out.println();
 
 		boolean[] pivotedPoints = new boolean[rows];	// default false
 		int index = 0;
@@ -111,7 +137,7 @@ System.out.println();*/
 				if ((Math.abs(matrix[l][k]/pivots[l]) > coeff) && (!pivotedPoints[l])){	//get largest row coeff, not already scaled
 					coeff = Math.abs(matrix[l][k]/pivots[l]); //coeff = coeff of largest row, not already scaled.
 					index = l; 		// index of row w/ largest coeff
-					System.out.print((Math.rint((coeff * 100))/100) + ", ");
+					System.out.print((Math.rint((coeff * 100))/100) + " < ");
 					//				System.out.println(l + "Coeff: " + coeff + " and index: " + index + " coeff2: " + matrix[l][k] + " and pivot: " + pivots[l]);
 				}
 			}
@@ -122,7 +148,6 @@ System.out.println();*/
 			//scale relative to index
 			for (int m = 0; m < rows; ++m){
 				if (m != index){
-					solutions[scaleIndex] = matrix[index][scaleIndex];
 					scaling = (-1)*(matrix[m][scaleIndex]/matrix[index][scaleIndex]); //what to mult pivot by
 					//				System.out.println("scaling: " + (Math.rint((scaling * 10000))/10000));
 					for (int n = 0; n < cols; ++n){	//mult each col of others
@@ -136,11 +161,15 @@ System.out.println();*/
 			System.out.println();
 		}
 	}
+	/**
+	 * Gets the solutions from the simplified matrix.
+	 * @param matrix
+	 */
 	public static void solveSimplified(double[][] matrix){
 		double[] solutions = new double[matrix.length];
 		int rows = matrix.length;
 		int cols = matrix[0].length;
-		
+
 		for (int i = 0; i < cols-1; ++i){
 			for (int j = 0; j < rows; ++j){
 				if (matrix[j][i] != 0){
@@ -152,8 +181,10 @@ System.out.println();*/
 			System.out.println("X" + k + "=" + solutions[k]); 
 		}
 	}
-
-
+	/**
+	 * Prints the matrix.
+	 * @param matrix
+	 */
 	public static void toString(double[][] matrix){
 		for (int i = 0; i < matrix.length; ++i){
 			for (int j = 0; j < matrix[0].length; ++j){
