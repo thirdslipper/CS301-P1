@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -31,7 +32,18 @@ public class GaussianElimination {
 		evaluate(matrix);
 		solveSimplified(matrix);
 	}
-
+	
+/*	public static void main(String[] args) throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		long end;
+		double[][] matrix = largeMatrix(100);
+		toString(matrix);
+		evaluate(matrix);
+		solveSimplified(matrix);
+		end = System.currentTimeMillis();
+		System.out.println("time elapse: " + (end-start));
+	}*/
+	
 	/**
 	 * Reads the file and creates an ArrayList<String> representing a matrix from the data provided in the file.
 	 * @param file
@@ -192,5 +204,15 @@ public class GaussianElimination {
 			}
 			System.out.println();
 		}
+	}
+	public static double[][] largeMatrix(int size){
+		Random rng = new Random();
+		double[][] matrix = new double[size][size];
+		for (int i = 0; i < size; ++i){
+			for (int j = 0; j < size; ++j){
+				matrix[i][j] = rng.nextInt(11);	//random values 0-10
+			}
+		}
+		return matrix;
 	}
 }
