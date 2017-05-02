@@ -25,12 +25,13 @@ public class GaussianElimination {
 		}
 		toString(matrix);
 		evaluate(matrix);
+		solveSimplified(matrix);
 	}
 
 	public static double[][] readFile(String file) throws FileNotFoundException{
 		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
-		
+
 		ArrayList<String> equations = new ArrayList<String>();
 
 		String line = null;
@@ -64,7 +65,7 @@ public class GaussianElimination {
 
 		double[][] matrix = new double[rows][cols];
 		String[] convert = {};
-		
+
 		//construct int double arr matrix.
 		for (int i = 0; i < rows; ++i){
 			convert = equations.get(i).split(" ");
@@ -75,12 +76,13 @@ public class GaussianElimination {
 		return matrix;
 	}
 	public static void evaluate(double[][] matrix){
+		double[] solutions = new double[matrix.length];
 		double[] pivots = new double[matrix.length]; //#rows and pivots
-System.out.println(pivots.length);
+		System.out.println(pivots.length);
 		double largestCoeff = -1;
 		int rows = pivots.length, cols = matrix[0].length;
 
-			//get pivots[](largest coeffs) of each row
+		//get pivots[](largest coeffs) of each row
 		for (int i = 0; i < rows; ++i){	//for ea row
 			for (int j = 0; j < cols-1; ++j){	//for ea col exclude answer
 				if (Math.abs(matrix[i][j]) >= largestCoeff){
@@ -89,17 +91,18 @@ System.out.println(pivots.length);
 				}
 			}
 		}
-		
-System.out.print("Pivots: ");
+
+/*System.out.print("Pivots: ");
 for (int z = 0; z < pivots.length; ++z){
 	System.out.print(pivots[z] +", ");
 }
-System.out.println();
-		
+System.out.println();*/
+
 		boolean[] pivotedPoints = new boolean[rows];	// default false
 		int index = 0;
 		double coeff = 0;
-			
+		int scaleIndex = 0;
+
 		for (int k = 0; k < cols-1; ++k){
 			// get coeff=largestCoeff, index=row index of largest- for each row
 			coeff = 0;
@@ -108,23 +111,23 @@ System.out.println();
 				if ((Math.abs(matrix[l][k]/pivots[l]) > coeff) && (!pivotedPoints[l])){	//get largest row coeff, not already scaled
 					coeff = Math.abs(matrix[l][k]/pivots[l]); //coeff = coeff of largest row, not already scaled.
 					index = l; 		// index of row w/ largest coeff
-					System.out.print((Math.rint((coeff * 10000))/10000) + ", ");
-	//				System.out.println(l + "Coeff: " + coeff + " and index: " + index + " coeff2: " + matrix[l][k] + " and pivot: " + pivots[l]);
+					System.out.print((Math.rint((coeff * 100))/100) + ", ");
+					//				System.out.println(l + "Coeff: " + coeff + " and index: " + index + " coeff2: " + matrix[l][k] + " and pivot: " + pivots[l]);
 				}
 			}
 			System.out.println();
 			pivotedPoints[index] = true;
-			
+
 			double scaling = 0;
-			int scaleIndex = 0;
-				//scale relative to index
+			//scale relative to index
 			for (int m = 0; m < rows; ++m){
 				if (m != index){
+					solutions[scaleIndex] = matrix[index][scaleIndex];
 					scaling = (-1)*(matrix[m][scaleIndex]/matrix[index][scaleIndex]); //what to mult pivot by
-					System.out.println("scaling: " + scaling);
+					//				System.out.println("scaling: " + (Math.rint((scaling * 10000))/10000));
 					for (int n = 0; n < cols; ++n){	//mult each col of others
 						matrix[m][n] = matrix[m][n] + (scaling * matrix[index][n]);
-						matrix[m][n] = Math.rint((matrix[m][n] * 10000))/10000;
+						matrix[m][n] = (Math.rint(matrix[m][n] * 100))/100;
 					}
 				}
 			}
@@ -132,10 +135,25 @@ System.out.println();
 			toString(matrix);
 			System.out.println();
 		}
-	//	toString(matrix);
 	}
-	
-	
+	public static void solveSimplified(double[][] matrix){
+		double[] solutions = new double[matrix.length];
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		
+		for (int i = 0; i < cols-1; ++i){
+			for (int j = 0; j < rows; ++j){
+				if (matrix[j][i] != 0){
+					solutions[i] = (matrix[j][cols-1])/(matrix[j][i]);
+				}
+			}
+		}
+		for (int k = 0; k < solutions.length; ++k){
+			System.out.println("X" + k + "=" + solutions[k]); 
+		}
+	}
+
+
 	public static void toString(double[][] matrix){
 		for (int i = 0; i < matrix.length; ++i){
 			for (int j = 0; j < matrix[0].length; ++j){
